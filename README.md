@@ -1,7 +1,7 @@
 # I like coding!!!
 Hey, welcome to my github page, enjoy your stay.
 <br>
-Currently working at ehvLINC on a project called [Suitless]("https://gitlab.com/suitless"). 
+Currently working at ehvLINC on a project called ![Suitless]("https://gitlab.com/suitless"). 
 Also doing my last year of software engineering at Fontys University 💪🏼.
 
 ## Languages and frameworks I've learned so far:
@@ -24,9 +24,11 @@ Also doing my last year of software engineering at Fontys University 💪🏼.
 
 <br><br><br>
 
+[![Top Langs](https://github-readme-stats.vercel.app/api/top-langs/?username=spoilerdo&langs_count=4)](https://github.com/anuraghazra/github-readme-stats)
+
 # Suitless
 This is one of the biggest projects I am working on with my colleges.
-You can check it out on [gitlab]("https://gitlab.com/suitless").
+You can check it out on ![gitlab]("https://gitlab.com/suitless").
 It is a tool editor that can create dynamic questionnaires people can fill in to get personalized advice about a certain topic. Currently it is being used to give startup companies information about legal issue, for instance Privacy and Intellectual Property.
 Off course this can be used for more than that.
 

@@ -2,7 +2,7 @@
 Hey, welcome to my github page, enjoy your stay.
 <br>
 Currently working at ehvLINC on a project called ![Suitless]("https://gitlab.com/suitless"). 
-Also doing my last year of software engineering at Fontys University 💪🏼.
+Also doing my last year of software engineering at Fontys University of Applied Sciences 💪🏼.
 
 ## Languages and frameworks I've learned so far:
 

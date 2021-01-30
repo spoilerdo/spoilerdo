@@ -21,3 +21,7 @@ jobs:
           base: header
           config_timezone: Europe/Berlin
           plugin_languages: yes
+  gitlab-metrics:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: node12

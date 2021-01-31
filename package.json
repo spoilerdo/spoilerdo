@@ -7,9 +7,12 @@
     "lint": "eslint .",
     "prepare": "ncc build index.js -o dist --source-map --license licenses.txt",
     "all": "npm run lint && npm run prepare && npm run test",
-    "test": "jest"
+    "test": "jest --env=node"
   },
   "author": "Martijn Dormans",
+  "jest": {
+    "testTimeout": 30000
+  },
   "dependencies": {
     "@actions/core": "^1.2.5",
     "axios": "^0.21.1",

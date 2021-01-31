@@ -5,7 +5,12 @@ const webrequest = require('./webrequest');
 async function run () {
   try{
     const response = await webrequest('https://gitlab.com/users/martijn.dormans/calendar.json', 'GET');
-    const json = JSON.parse(response);
+
+    if(!response.data) {
+      core.setFailed('no gitlab metrics found');
+    }
+
+    const json = JSON.parse(response.data);
     let newJson = {};
     for (const [key, value] of Object.entries(json)) {
         const date = new Date(key);

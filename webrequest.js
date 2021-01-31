@@ -6,7 +6,8 @@ async function webrequest(url, method) {
         method
     };
     try {
-        return await axios(config);
+        const response = await axios(config);
+        return response;
     } catch (error) {
         console.error(error);
     }

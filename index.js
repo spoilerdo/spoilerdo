@@ -1,5 +1,5 @@
 const core = require('@actions/core');
-const tmp = require('tmp');
+const fs = require('file-system');
 const webrequest = require('./webrequest');
 
 async function run () {
@@ -20,16 +20,28 @@ async function run () {
     }
 
     // write the file to the repository
-    var tempFile = tmp.fileSync({
-      dir: process.env.RUNNER_TEMP,
-      prefix: "gitlab-calendar",
-      postfix: ".json",
-      keep: true,
-      discardDescriptor: true
-    });
+    const fullPath = path.join(process.env.GITHUB_WORKSPACE, dir || "", "gitlab-metrics-data");
+    fs.writeFile(fullPath, fileContent, function (error) {
 
-    fs.writeFileSync(tempFile.name, newJson);
-    core.setOutput("result", tempFile.name);
+      if (error) {
+          core.setFailed(error.message);
+          throw error
+      }
+
+      core.info('JSON file created.')
+
+      fs.readFile(fullPath, null, handleFile)
+
+      function handleFile(err, data) {
+          if (err) {
+              core.setFailed(error.message)
+              throw err
+          }
+
+          core.info('JSON checked.')
+          core.setOutput("successfully", `Successfully created json on ${fullPath} directory with ${fileContent} data`);
+      }
+    });
   } catch (error) {
       core.setFailed(error.message);
   }

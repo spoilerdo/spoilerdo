@@ -1,11 +1,8 @@
-//get the json from gitlab
-//convert the json date to seconds
-//and put this json into this repo to be used by the svg that will be used in the readme
-
 const core = require('@actions/core');
 const tmp = require('tmp');
 
-try{
+function run () {
+  try{
     const json = JSON.parse('https://gitlab.com/users/martijn.dormans/calendar.json');
     let newJson = {};
     for (const [key, value] of Object.entries(json)) {
@@ -26,6 +23,9 @@ try{
 
       fs.writeFileSync(tempFile.name, newJson);
       core.setOutput("result", tempFile.name);
-} catch (error) {
-    core.setFailed(error.message);
+  } catch (error) {
+      core.setFailed(error.message);
+  }
 }
+
+run();

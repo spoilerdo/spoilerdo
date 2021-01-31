@@ -1,9 +1,11 @@
 const core = require('@actions/core');
 const tmp = require('tmp');
+const webrequest = require('./webrequest');
 
-function run () {
+async function run () {
   try{
-    const json = JSON.parse('https://gitlab.com/users/martijn.dormans/calendar.json');
+    const response = await webrequest('https://gitlab.com/users/martijn.dormans/calendar.json', 'GET');
+    const json = JSON.parse(response);
     let newJson = {};
     for (const [key, value] of Object.entries(json)) {
         const date = new Date(key);

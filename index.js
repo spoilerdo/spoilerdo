@@ -3,7 +3,6 @@
 //and put this json into this repo to be used by the svg that will be used in the readme
 
 const core = require('@actions/core');
-const github = require('@actions/github');
 const tmp = require('tmp');
 
 try{

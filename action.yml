@@ -1,8 +1,8 @@
 name: 'gitlab-metrics'
 description: 'Gets the gitlab metrics and makes a json file from it'
 outputs:
-  time: # id of output
-    description: 'The time we greeted you'
+  result:
+    description: 'Gitlab JSON metrics'
 runs:
   using: 'node12'
-  main: 'index.js'
+  main: 'dist/index.js'

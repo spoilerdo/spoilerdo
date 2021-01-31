@@ -7,13 +7,14 @@ require('./sourcemap-register.js');module.exports =
 
 const core = __nccwpck_require__(2186);
 const fs = __nccwpck_require__(8557);
+const path = __nccwpck_require__(5622);
 const webrequest = __nccwpck_require__(4069);
 
-async function run () {
-  try{
+async function run() {
+  try {
     const response = await webrequest('https://gitlab.com/users/martijn.dormans/calendar.json', 'GET');
 
-    if(!response.data) {
+    if (!response.data) {
       core.setFailed('no gitlab metrics found');
     }
 
@@ -27,34 +28,34 @@ async function run () {
     }
 
     // write the file to the repository
-    const fullPath = path.join(process.env.GITHUB_WORKSPACE, dir || "", "gitlab-metrics-data");
-    fs.writeFile(fullPath, fileContent, function (error) {
-
+    const fullPath = path.join(process.env.GITHUB_WORKSPACE, 'gitlab-metrics-data');
+    fs.writeFile(fullPath, newJson, function (error) {
       if (error) {
-          core.setFailed(error.message);
-          throw error
+        core.setFailed(error.message);
+        throw error;
       }
 
-      core.info('JSON file created.')
+      core.info('JSON file created.');
 
-      fs.readFile(fullPath, null, handleFile)
+      fs.readFile(fullPath, null, handleFile);
 
       function handleFile(err, data) {
-          if (err) {
-              core.setFailed(error.message)
-              throw err
-          }
+        if (err) {
+          core.setFailed(error.message);
+          throw err;
+        }
 
-          core.info('JSON checked.')
-          core.setOutput("successfully", `Successfully created json on ${fullPath} directory with ${fileContent} data`);
+        core.info('JSON checked.');
+        core.setOutput('successfully', `Successfully created json on ${fullPath} directory with ${fileContent} data`);
       }
     });
   } catch (error) {
-      core.setFailed(error.message);
+    core.setFailed(error.message);
   }
 }
 
 run();
+
 
 /***/ }),
 

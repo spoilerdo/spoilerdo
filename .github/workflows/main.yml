@@ -24,4 +24,4 @@ jobs:
   gitlab-metrics:
     runs-on: ubuntu-latest
     steps:
-      - uses: node12
+      - uses: spoilerdo/spoilerdo@v1

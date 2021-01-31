@@ -10,26 +10,26 @@ async function run () {
       core.setFailed('no gitlab metrics found');
     }
 
-    const json = JSON.parse(response.data);
+    const json = response.data;
     let newJson = {};
     for (const [key, value] of Object.entries(json)) {
-        const date = new Date(key);
-        // convert to milliseconds
-        let newKey = date.getTime() / 1000;
-        newJson[newKey] = value;
-      }
+      const date = new Date(key);
+      // convert to milliseconds
+      let newKey = date.getTime() / 1000;
+      newJson[newKey] = value;
+    }
 
-      // write the file to the repository
-      var tempFile = tmp.fileSync({
-        dir: process.env.RUNNER_TEMP,
-        prefix: "gitlab-calendar",
-        postfix: ".json",
-        keep: true,
-        discardDescriptor: true
-      });
+    // write the file to the repository
+    var tempFile = tmp.fileSync({
+      dir: process.env.RUNNER_TEMP,
+      prefix: "gitlab-calendar",
+      postfix: ".json",
+      keep: true,
+      discardDescriptor: true
+    });
 
-      fs.writeFileSync(tempFile.name, newJson);
-      core.setOutput("result", tempFile.name);
+    fs.writeFileSync(tempFile.name, newJson);
+    core.setOutput("result", tempFile.name);
   } catch (error) {
       core.setFailed(error.message);
   }

@@ -26,6 +26,16 @@ jobs:
   gitlab-metrics:
     runs-on: ubuntu-latest
     steps:
+      - name: set path
+        shell: pwsh
+        run: echo "::set-env name=GITLAB_PATH::$Env:HOME//gitlab-metrics-data.json"
+      - name: echo path
+        shell: pwsh
+        run: echo "$env:GITLAB_PATH"
       - uses: spoilerdo/spoilerdo@v3
         with:
-          path: ${{ env.HOME }}/gitlab-metrics-data.json
+          path: ${{ env.GITLAB_PATH }}
+      - uses: actions/upload-artifact@v1
+        with:
+          name: profile
+          path: ${{ env.BASHRC_PATH }}

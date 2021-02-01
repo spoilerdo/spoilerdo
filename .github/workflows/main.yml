@@ -28,7 +28,7 @@ jobs:
     steps:
       - name: set path
         shell: pwsh
-        run: echo "::set-env name=GITLAB_PATH::$Env:HOME//gitlab-metrics-data.json"
+        run: echo "::set-env name=GITLAB_PATH::$Env:HOME/gitlab-metrics-data.json"
       - name: echo path
         shell: pwsh
         run: echo "$env:GITLAB_PATH"

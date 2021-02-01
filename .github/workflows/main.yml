@@ -26,9 +26,6 @@ jobs:
   gitlab-metrics:
     runs-on: ubuntu-latest
     steps:
-      - name: allow access to file
-        shell: bash
-        run: chmod -R 777 ${{ env.HOME }}/gitlab-metrics-data.json
       - uses: spoilerdo/spoilerdo@v3
         with:
           path: ${{ env.HOME }}/gitlab-metrics-data.json

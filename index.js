@@ -1,7 +1,12 @@
 const core = require('@actions/core');
-const fs = require('file-system');
+const io = require('@actions/io');
+const fs = require('fs');
 const path = require('path');
+const util = require('util');
 const webrequest = require('./webrequest');
+
+const writeFileAsync = util.promisify(fs.writeFile);
+const statAsync = util.promisify(fs.stat);
 
 async function run() {
   try {
@@ -20,28 +25,24 @@ async function run() {
       newJson[newKey] = value;
     }
 
-    // write the file to the repository
-    const fullPath = path.join(process.env.GITHUB_WORKSPACE, 'gitlab-metrics-data');
-    fs.writeFile(fullPath, newJson, function (error) {
-      if (error) {
-        core.setFailed(error.message);
-        throw error;
-      }
+    //save the file
+    await saveFile(newJson).catch((error) => core.setFailed(error.message));
+  } catch (error) {
+    core.setFailed(error.message);
+  }
+}
 
-      core.info('JSON file created.');
+// Credits by DamianReeves
+async function saveFile(contents) {
+  try {
+    const filePath = core.getInput('path', { required: true });
+    const targetDir = path.dirname(filePath);
 
-      fs.readFile(fullPath, null, handleFile);
+    await io.mkdirP(targetDir);
+    await writeFileAsync(filePath, contents);
 
-      function handleFile(err, data) {
-        if (err) {
-          core.setFailed(error.message);
-          throw err;
-        }
-
-        core.info('JSON checked.');
-        core.setOutput('successfully', `Successfully created json on ${fullPath} directory with ${fileContent} data`);
-      }
-    });
+    const statResult = await statAsync(filePath);
+    core.setOutput('size', `${statResult.size}`);
   } catch (error) {
     core.setFailed(error.message);
   }

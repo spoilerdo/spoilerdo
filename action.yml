@@ -1,8 +1,12 @@
 name: 'gitlab-metrics'
 description: 'Gets the gitlab metrics and makes a json file from it'
+inputs:
+  path:
+    description: "The path of the file to write"
+    required: true
 outputs:
-  result:
-    description: 'Gitlab JSON metrics'
+  size:
+    description: 'The returned size'
 runs:
   using: 'node12'
   main: 'dist/index.js'

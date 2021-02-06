@@ -25,6 +25,7 @@ async function run() {
   committer.commit = true;
   committer.token = _token || token;
   committer.branch = github.context.ref.replace(/^refs[/]heads[/]/, '');
+  core.info(`branch: ${committer.branch}`);
 
   //Instantiate API for committer
   committer.rest = github.getOctokit(committer.token);

@@ -54,6 +54,7 @@ async function run() {
   } catch (error) {
     core.setFailed(error);
   }
+  core.info(`Previous render sha: ${committer.sha ? committer.sha : '(none)'}`);
 
   await committer.rest.repos.createOrUpdateFileContents({
     ...github.context.repo,

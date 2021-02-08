@@ -1,8 +1,18 @@
 name: 'gitlab-metrics'
 description: 'Gets the gitlab metrics and makes a json file from it'
+inputs:
+  token:
+    description: "Personal access token"
+    required: true
+  committer_token:
+    description: "Special auto-generated token used for commits"
+    required: true
+  filename:
+    description: "The name of the JSON that will be generated"
+    required: true
 outputs:
-  result:
-    description: 'Gitlab JSON metrics'
+  size:
+    description: 'The returned size'
 runs:
   using: 'node12'
   main: 'dist/index.js'

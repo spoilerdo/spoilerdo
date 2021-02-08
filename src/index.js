@@ -59,15 +59,19 @@ async function run() {
   }
   core.info(`Previous render sha: ${committer.sha ? committer.sha : '(none)'}`);
 
-  await committer.rest.repos.createOrUpdateFileContents({
-    ...github.context.repo,
-    path: filename,
-    message: `Update ${filename} - [Skip GitHub Action]`,
-    content: Buffer.from(file).toString('base64'),
-    branch: committer.branch,
-    ...(committer.sha ? { sha: committer.sha } : {}),
-  });
-  core.info('Commit to repository: success!');
+  try {
+    await committer.rest.repos.createOrUpdateFileContents({
+      ...github.context.repo,
+      path: filename,
+      message: `Update ${filename} - [Skip GitHub Action]`,
+      content: Buffer.from(file).toString('base64'),
+      branch: committer.branch,
+      ...(committer.sha ? { sha: committer.sha } : {}),
+    });
+    core.info('Commit to repository: success!');
+  } catch (error) {
+    core.info(error);
+  }
 }
 
 run();

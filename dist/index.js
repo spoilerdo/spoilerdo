@@ -9654,6 +9654,8 @@ async function run() {
   }
 
   //Retrieve previous render SHA to be able to update file content through API
+  // TODO: this is not going good. WHY??? idk!!
+  core.info(`repo name: ${github.context.repo.repo}`);
   committer.sha = null;
   try {
     const {
@@ -9670,7 +9672,7 @@ async function run() {
     );
     committer.sha = oid;
   } catch (error) {
-    core.setFailed(error);
+    core.info(error);
   }
   core.info(`Previous render sha: ${committer.sha ? committer.sha : '(none)'}`);
 

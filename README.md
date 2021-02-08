@@ -32,5 +32,9 @@ You can check it out on ![gitlab]("https://gitlab.com/suitless").
 It is a tool editor that can create dynamic questionnaires people can fill in to get personalized advice about a certain topic. Currently it is being used to give startup companies information about legal issue, for instance Privacy and Intellectual Property.
 Off course this can be used for more than that.
 
+# Gitlab Activity
+Here a nice auto generated graph of my ![gitlab activity]("https://gitlab.com/martijn.dormans").
+![Gitlab Metrics]("https://raw.githubusercontent.com/spoilerdo/spoilerdo/master/gitlab-metrics.svg")
+
 ## Other projects
 If you want to see more of the projects I did with my classmates at university or on my own check the repositories below.

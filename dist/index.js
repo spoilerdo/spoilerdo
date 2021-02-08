@@ -9620,6 +9620,7 @@ const github = __nccwpck_require__(5438);
 const octokit = __nccwpck_require__(8467);
 const generateJson = __nccwpck_require__(1031);
 
+//Inspired by lowlighter/metrics repo (https://github.com/lowlighter/metrics/blob/master/source/app/action/index.mjs)
 async function run() {
   //Inputs
   const token = core.getInput('token', { required: true });
@@ -9653,9 +9654,7 @@ async function run() {
     core.info('Committer account: (github-actions)');
   }
 
-  //Retrieve previous render SHA to be able to update file content through API
-  // TODO: this is not going good. WHY??? idk!!
-  core.info(`repo name: ${github.context.repo.repo}`);
+  //Retrieving previous render SHA to be able to update file content trough API
   committer.sha = null;
   try {
     const {
@@ -9676,6 +9675,7 @@ async function run() {
   }
   core.info(`Previous render sha: ${committer.sha ? committer.sha : '(none)'}`);
 
+  // Commit the new json file
   try {
     await committer.rest.repos.createOrUpdateFileContents({
       ...github.context.repo,

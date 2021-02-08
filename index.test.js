@@ -1,6 +1,4 @@
 const webrequest = require('./webrequest');
-const fs = require('file-system');
-const path = require('path');
 
 test('get json valid', async () => {
   try {

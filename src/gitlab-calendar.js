@@ -18,7 +18,7 @@ async function generateJson() {
       newJson[newKey] = value;
     }
 
-    return newJson;
+    return JSON.stringify(newJson);
   } catch (error) {
     core.setFailed(error.message);
   }

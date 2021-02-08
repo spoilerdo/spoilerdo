@@ -30,4 +30,4 @@ jobs:
         with:
           token: ${{ secrets.METRICS_TOKEN }}
           committer_token: ${{ secrets.GITHUB_TOKEN }}
-          filename: gitlab-metrics-data
+          filename: gitlab-metrics-data.json

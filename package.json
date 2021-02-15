@@ -23,7 +23,8 @@
     "cal-heatmap": "^3.6.2",
     "d3": "^6.5.0",
     "jest": "^26.6.3",
-    "jsdom": "^16.4.0"
+    "jsdom": "^16.4.0",
+    "node-fetch-polyfill": "^2.0.6"
   },
   "devDependencies": {
     "@vercel/ncc": "^0.27.0",

@@ -4,6 +4,9 @@ const jsdom = new JSDOM('<!DOCTYPE html><html><body><div id="cal-heatmap"></div>
   runScripts: 'outside-only',
 });
 const document = jsdom.window.document;
+if (typeof fetch !== 'function') {
+  global.fetch = require('node-fetch-polyfill');
+}
 
 var CalHeatMap = function () {
   'use strict';
@@ -1178,6 +1181,10 @@ var CalHeatMap = function () {
 };
 
 CalHeatMap.prototype = {
+  getDom: function() {
+    return document;
+  },
+
   /**
    * Validate and merge user settings with default settings
    *
@@ -1201,7 +1208,7 @@ CalHeatMap.prototype = {
       throw new Error("The data type '" + options.dataType + "' is not valid data type");
     }
 
-    if (d3.select(options.itemSelector)[0][0] === null) {
+    if (d3.select(document).select(options.itemSelector)[0] === null) {
       throw new Error("The node '" + options.itemSelector + "' specified in itemSelector does not exist");
     }
 
@@ -1971,8 +1978,7 @@ CalHeatMap.prototype = {
   getDomainKeys: function () {
     'use strict';
 
-    return this._domains
-      .keys()
+    return Array.from(this._domains.keys())
       .map(function (d) {
         return parseInt(d, 10);
       })
@@ -2339,7 +2345,7 @@ CalHeatMap.prototype = {
     } else {
       stop = new Date(+start + range * 1000 * 60);
     }
-    return d3.time.minutes(Math.min(start, stop), Math.max(start, stop));
+    return d3.timeMinutes(Math.min(start, stop), Math.max(start, stop));
   },
 
   /**
@@ -2361,7 +2367,7 @@ CalHeatMap.prototype = {
       stop.setHours(stop.getHours() + range);
     }
 
-    var domains = d3.time.hours(Math.min(start, stop), Math.max(start, stop));
+    var domains = d3.timeHours(Math.min(start, stop), Math.max(start, stop));
 
     // Passing from DST to standard time
     // If there are 25 hours, let's compress the duplicate hours
@@ -2404,7 +2410,7 @@ CalHeatMap.prototype = {
       stop = new Date(stop.setDate(stop.getDate() + parseInt(range, 10)));
     }
 
-    return d3.time.days(Math.min(start, stop), Math.max(start, stop));
+    return d3.timeDays(Math.min(start, stop), Math.max(start, stop));
   },
 
   /**
@@ -2440,8 +2446,8 @@ CalHeatMap.prototype = {
     }
 
     return this.options.weekStartOnMonday === true
-      ? d3.time.mondays(Math.min(weekStart, stop), Math.max(weekStart, stop))
-      : d3.time.sundays(Math.min(weekStart, stop), Math.max(weekStart, stop));
+      ? d3.timeMondays(Math.min(weekStart, stop), Math.max(weekStart, stop))
+      : d3.timeSundays(Math.min(weekStart, stop), Math.max(weekStart, stop));
   },
 
   /**
@@ -2463,7 +2469,7 @@ CalHeatMap.prototype = {
       stop = stop.setMonth(stop.getMonth() + range);
     }
 
-    return d3.time.months(Math.min(start, stop), Math.max(start, stop));
+    return d3.timeMonths(Math.min(start, stop), Math.max(start, stop));
   },
 
   /**
@@ -2484,7 +2490,7 @@ CalHeatMap.prototype = {
       stop = new Date(d.getFullYear() + range, 0);
     }
 
-    return d3.time.years(Math.min(start, stop), Math.max(start, stop));
+    return d3.timeYears(Math.min(start, stop), Math.max(start, stop));
   },
 
   /**
@@ -2677,7 +2683,7 @@ CalHeatMap.prototype = {
     if (arguments.length < 6) {
       updateMode = this.APPEND_ON_UPDATE;
     }
-    var _callback = function (error, data) {
+    var _callback = function (data) {
       if (afterLoad !== false) {
         if (typeof afterLoad === 'function') {
           data = afterLoad(data);
@@ -2714,7 +2720,7 @@ CalHeatMap.prototype = {
           var xhr = null;
           switch (this.options.dataType) {
             case 'json':
-              xhr = d3.json(url);
+              xhr = d3.json(url, {method: requestType, body: payload});
               break;
             case 'csv':
               xhr = d3.csv(url);
@@ -2736,7 +2742,8 @@ CalHeatMap.prototype = {
             }
           }
 
-          xhr.send(requestType, payload, _callback);
+          //xhr.send(requestType, payload, _callback);
+          xhr.then((data) => _callback(data)).catch((error) => console.log(error));
         }
         return false;
       case 'object':
@@ -3379,7 +3386,7 @@ Legend.prototype.redraw = function (width) {
   _legend.push(_legend[_legend.length - 1] + 1);
 
   var legendElement = calendar.root.select('.graph-legend');
-  if (legendElement[0][0] !== null) {
+  if (legendElement[0] !== null) {
     legend = legendElement;
     legendItem = legend.select('g').selectAll('rect').data(_legend);
   } else {

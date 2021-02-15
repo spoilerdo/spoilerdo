@@ -27,4 +27,5 @@ jobs:
         with:
           token: ${{ secrets.METRICS_TOKEN }}
           committer_token: ${{ secrets.GITHUB_TOKEN }}
-          filename: gitlab-metrics-data.json
+          json-filename: gitlab-metrics-data.json
+          svg-filename: gitlab-metrics.svg

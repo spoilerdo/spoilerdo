@@ -13,8 +13,7 @@ function generateHeatmap() {
     legend: [2, 4, 10, 20, 40],
   });
 
-  console.log(cal.dom());
+  return cal.getDom().getElementById('cal-heatmap').innerHTML;
 }
 
-//module.exports = generateHeatmap;
-generateHeatmap();
+module.exports = generateHeatmap;

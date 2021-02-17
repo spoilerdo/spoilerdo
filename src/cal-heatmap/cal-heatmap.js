@@ -1,4 +1,5 @@
 const d3 = require('d3');
+const d3Request = require('d3-request');
 const JSDOM = require('jsdom').JSDOM;
 const jsdom = new JSDOM('<!DOCTYPE html><html><body><div id="cal-heatmap"></div></body></html>', {
   runScripts: 'outside-only',
@@ -7,6 +8,14 @@ const document = jsdom.window.document;
 if (typeof fetch !== 'function') {
   global.fetch = require('node-fetch-polyfill');
 }
+
+/*! cal-heatmap v3.6.2 (Mon Oct 10 2016 01:36:20)
+ *  ---------------------------------------------
+ *  Cal-Heatmap is a javascript module to create calendar heatmap to visualize time series data
+ *  https://github.com/wa0x6e/cal-heatmap
+ *  Licensed under the MIT license
+ *  Copyright 2014 Wan Qi Chen
+ */
 
 var CalHeatMap = function () {
   'use strict';
@@ -87,11 +96,6 @@ var CalHeatMap = function () {
     // Expect a string, formatted like "a=b;c=d"
     dataPostPayload: null,
 
-    // Additional headers sent when requesting data
-    // Expect an object formatted like:
-    // { 'X-CSRF-TOKEN': 'token' }
-    dataRequestHeaders: null,
-
     // Whether to consider missing date:value from the datasource
     // as equal to 0, or just leave them as missing
     considerMissingDataAsZero: false,
@@ -166,14 +170,14 @@ var CalHeatMap = function () {
     // null to disable, and use the default css styles
     //
     // Examples:
-    // legendColors: {
-    //		min: "green",
-    //		max: "red",
-    //		empty: "#ffffff",
-    //		base: "grey",
-    //		overflow: "red"
-    // }
-    legendColors: null,
+    legendColors: {
+      min: 'green',
+      max: 'red',
+      empty: '#ffffff',
+      base: 'grey',
+      overflow: 'red',
+    },
+    //legendColors: null,
 
     // ================================================
     // HIGHLIGHT
@@ -271,9 +275,6 @@ var CalHeatMap = function () {
     afterLoadData: function (data) {
       return data;
     },
-
-    // Callback triggered after calling and completing update().
-    afterUpdate: null,
 
     // Callback triggered after calling next().
     // The `status` argument is equal to true if there is no
@@ -608,7 +609,7 @@ var CalHeatMap = function () {
 
   // Record all the valid domains
   // Each domain value is a timestamp in milliseconds
-  this._domains = new Map();
+  this._domains = d3.map();
 
   this.graphDim = {
     width: 0,
@@ -1181,7 +1182,7 @@ var CalHeatMap = function () {
 };
 
 CalHeatMap.prototype = {
-  getDom: function() {
+  getDom: function () {
     return document;
   },
 
@@ -1208,8 +1209,8 @@ CalHeatMap.prototype = {
       throw new Error("The data type '" + options.dataType + "' is not valid data type");
     }
 
-    if (d3.select(document).select(options.itemSelector)[0] === null) {
-      throw new Error("The node '" + options.itemSelector + "' specified in itemSelector does not exist");
+    if (d3.select(document).select(options.itemSelector)[0][0] === null) {
+      throw new Error("The node '" + options.itemSelector + "' specified in itemSelector does not exists");
     }
 
     try {
@@ -1240,7 +1241,6 @@ CalHeatMap.prototype = {
       'afterLoadData',
       'afterLoadPreviousDomain',
       'afterLoadNextDomain',
-      'afterUpdate',
     ];
 
     for (var k in s) {
@@ -1494,6 +1494,7 @@ CalHeatMap.prototype = {
       });
   },
 
+  //TODO: this does not work something goes wrong!!
   /**
    * Fill the calendar by coloring the cells
    *
@@ -1622,26 +1623,6 @@ CalHeatMap.prototype = {
         return 'subdomain-text' + parent.getHighlightClassName(d.t);
       })
       .call(formatSubDomainText);
-  },
-
-  /**
-   * Sprintf like function.
-   * Replaces placeholders {0} in string with values from provided object.
-   *
-   * @param string formatted String containing placeholders.
-   * @param object args Object with properties to replace placeholders in string.
-   *
-   * @return String
-   */
-  formatStringWithObject: function (formatted, args) {
-    'use strict';
-    for (var prop in args) {
-      if (args.hasOwnProperty(prop)) {
-        var regexp = new RegExp('\\{' + prop + '\\}', 'gi');
-        formatted = formatted.replace(regexp, args[prop]);
-      }
-    }
-    return formatted;
   },
 
   // =========================================================================//
@@ -1790,12 +1771,6 @@ CalHeatMap.prototype = {
     }
   },
 
-  afterUpdate: function () {
-    'use strict';
-
-    return this.triggerEvent('afterUpdate');
-  },
-
   // =========================================================================//
   // FORMATTER																//
   // =========================================================================//
@@ -1812,7 +1787,7 @@ CalHeatMap.prototype = {
     if (typeof format === 'function') {
       return format(d);
     } else {
-      var f = d3.timeFormat(format);
+      var f = d3.time.format(format);
       return f(d);
     }
   },
@@ -1821,7 +1796,7 @@ CalHeatMap.prototype = {
     'use strict';
 
     if (d.v === null && !this.options.considerMissingDataAsZero) {
-      return this.formatStringWithObject(this.options.subDomainTitleFormat.empty, {
+      return this.options.subDomainTitleFormat.empty.format({
         date: this.formatDate(new Date(d.t), this.options.subDomainDateFormat),
       });
     } else {
@@ -1831,7 +1806,7 @@ CalHeatMap.prototype = {
         value = 0;
       }
 
-      return this.formatStringWithObject(this.options.subDomainTitleFormat.filled, {
+      return this.options.subDomainTitleFormat.filled.format({
         count: this.formatNumber(value),
         name: this.options.itemName[value !== 1 ? 1 : 0],
         connector: this._domainType[this.options.subDomain].format.connector,
@@ -1978,7 +1953,8 @@ CalHeatMap.prototype = {
   getDomainKeys: function () {
     'use strict';
 
-    return Array.from(this._domains.keys())
+    return this._domains
+      .keys()
       .map(function (d) {
         return parseInt(d, 10);
       })
@@ -2189,7 +2165,7 @@ CalHeatMap.prototype = {
    * @param	Date
    * @return  int Day of the year [1,366]
    */
-  getDayOfYear: d3.timeFormat('%j'),
+  getDayOfYear: d3.time.format('%j'),
 
   /**
    * Return the week number of the year
@@ -2199,7 +2175,7 @@ CalHeatMap.prototype = {
   getWeekNumber: function (d) {
     'use strict';
 
-    var f = this.options.weekStartOnMonday === true ? d3.timeFormat('%W') : d3.timeFormat('%U');
+    var f = this.options.weekStartOnMonday === true ? d3.time.format('%W') : d3.time.format('%U');
     return f(d);
   },
 
@@ -2345,7 +2321,7 @@ CalHeatMap.prototype = {
     } else {
       stop = new Date(+start + range * 1000 * 60);
     }
-    return d3.timeMinutes(Math.min(start, stop), Math.max(start, stop));
+    return d3.time.minutes(Math.min(start, stop), Math.max(start, stop));
   },
 
   /**
@@ -2367,7 +2343,7 @@ CalHeatMap.prototype = {
       stop.setHours(stop.getHours() + range);
     }
 
-    var domains = d3.timeHours(Math.min(start, stop), Math.max(start, stop));
+    var domains = d3.time.hours(Math.min(start, stop), Math.max(start, stop));
 
     // Passing from DST to standard time
     // If there are 25 hours, let's compress the duplicate hours
@@ -2410,7 +2386,7 @@ CalHeatMap.prototype = {
       stop = new Date(stop.setDate(stop.getDate() + parseInt(range, 10)));
     }
 
-    return d3.timeDays(Math.min(start, stop), Math.max(start, stop));
+    return d3.time.days(Math.min(start, stop), Math.max(start, stop));
   },
 
   /**
@@ -2446,8 +2422,8 @@ CalHeatMap.prototype = {
     }
 
     return this.options.weekStartOnMonday === true
-      ? d3.timeMondays(Math.min(weekStart, stop), Math.max(weekStart, stop))
-      : d3.timeSundays(Math.min(weekStart, stop), Math.max(weekStart, stop));
+      ? d3.time.mondays(Math.min(weekStart, stop), Math.max(weekStart, stop))
+      : d3.time.sundays(Math.min(weekStart, stop), Math.max(weekStart, stop));
   },
 
   /**
@@ -2469,7 +2445,7 @@ CalHeatMap.prototype = {
       stop = stop.setMonth(stop.getMonth() + range);
     }
 
-    return d3.timeMonths(Math.min(start, stop), Math.max(start, stop));
+    return d3.time.months(Math.min(start, stop), Math.max(start, stop));
   },
 
   /**
@@ -2490,7 +2466,7 @@ CalHeatMap.prototype = {
       stop = new Date(d.getFullYear() + range, 0);
     }
 
-    return d3.timeYears(Math.min(start, stop), Math.max(start, stop));
+    return d3.time.years(Math.min(start, stop), Math.max(start, stop));
   },
 
   /**
@@ -2704,7 +2680,7 @@ CalHeatMap.prototype = {
     switch (typeof source) {
       case 'string':
         if (source === '') {
-          _callback(null, {});
+          _callback({});
           return true;
         } else {
           var url = this.parseURI(source, startDate, endDate);
@@ -2717,43 +2693,30 @@ CalHeatMap.prototype = {
             payload = this.parseURI(self.options.dataPostPayload, startDate, endDate);
           }
 
-          var xhr = null;
           switch (this.options.dataType) {
             case 'json':
-              xhr = d3.json(url, {method: requestType, body: payload});
+              d3Request.json(url, _callback).send(requestType, payload);
               break;
             case 'csv':
-              xhr = d3.csv(url);
+              d3Request.csv(url, _callback).send(requestType, payload);
               break;
             case 'tsv':
-              xhr = d3.tsv(url);
+              d3Request.tsv(url, _callback).send(requestType, payload);
               break;
             case 'txt':
-              xhr = d3.text(url, 'text/plain');
+              d3Request.text(url, 'text/plain', _callback).send(requestType, payload);
               break;
           }
-
-          // jshint maxdepth:5
-          if (self.options.dataRequestHeaders !== null) {
-            for (var header in self.options.dataRequestHeaders) {
-              if (self.options.dataRequestHeaders.hasOwnProperty(header)) {
-                xhr.header(header, self.options.dataRequestHeaders[header]);
-              }
-            }
-          }
-
-          //xhr.send(requestType, payload, _callback);
-          xhr.then((data) => _callback(data)).catch((error) => console.log(error));
         }
         return false;
       case 'object':
         if (source === Object(source)) {
-          _callback(null, source);
+          _callback(source);
           return false;
         }
       /* falls through */
       default:
-        _callback(null, {});
+        _callback({});
         return true;
     }
   },
@@ -3003,9 +2966,6 @@ CalHeatMap.prototype = {
   update: function (dataSource, afterLoad, updateMode) {
     'use strict';
 
-    if (arguments.length === 0) {
-      dataSource = this.options.data;
-    }
     if (arguments.length < 2) {
       afterLoad = true;
     }
@@ -3021,7 +2981,6 @@ CalHeatMap.prototype = {
       this.getSubDomain(domains[domains.length - 1]).pop(),
       function () {
         self.fill();
-        self.afterUpdate();
       },
       afterLoad,
       updateMode
@@ -3276,7 +3235,7 @@ CalHeatMap.prototype = {
 var DomainPosition = function () {
   'use strict';
 
-  this.positions = new Map();
+  this.positions = d3.map();
 };
 
 DomainPosition.prototype.getPosition = function (d) {
@@ -3386,7 +3345,7 @@ Legend.prototype.redraw = function (width) {
   _legend.push(_legend[_legend.length - 1] + 1);
 
   var legendElement = calendar.root.select('.graph-legend');
-  if (legendElement[0] !== null) {
+  if (legendElement[0][0] !== null) {
     legend = legendElement;
     legendItem = legend.select('g').selectAll('rect').data(_legend);
   } else {
@@ -3460,17 +3419,17 @@ Legend.prototype.redraw = function (width) {
 
   legendItem.select('title').text(function (d, i) {
     if (i === 0) {
-      return calendar.formatStringWithObject(options.legendTitleFormat.lower, {
+      return options.legendTitleFormat.lower.format({
         min: options.legend[i],
         name: options.itemName[1],
       });
     } else if (i === _legend.length - 1) {
-      return calendar.formatStringWithObject(options.legendTitleFormat.upper, {
+      return options.legendTitleFormat.upper.format({
         max: options.legend[i - 1],
         name: options.itemName[1],
       });
     } else {
-      return calendar.formatStringWithObject(options.legendTitleFormat.inner, {
+      return options.legendTitleFormat.inner.format({
         down: options.legend[i - 1],
         up: options.legend[i],
         name: options.itemName[1],
@@ -3568,7 +3527,7 @@ Legend.prototype.buildColors = function () {
 
   if (_legend[0] > 0) {
     _legend.unshift(0);
-  } else if (_legend[0] <= 0) {
+  } else if (_legend[0] < 0) {
     // Let's guess the leftmost value, it we have to add one
     _legend.unshift(_legend[0] - (_legend[_legend.length - 1] - _legend[0]) / _legend.length);
   }
@@ -3622,6 +3581,24 @@ Legend.prototype.getClass = function (n, withCssClass) {
 
   index.unshift('');
   return (index.join(' r') + (withCssClass ? index.join(' q') : '')).trim();
+};
+
+/**
+ * Sprintf like function
+ * @source http://stackoverflow.com/a/4795914/805649
+ * @return String
+ */
+String.prototype.format = function () {
+  'use strict';
+
+  var formatted = this;
+  for (var prop in arguments[0]) {
+    if (arguments[0].hasOwnProperty(prop)) {
+      var regexp = new RegExp('\\{' + prop + '\\}', 'gi');
+      formatted = formatted.replace(regexp, arguments[0][prop]);
+    }
+  }
+  return formatted;
 };
 
 /**

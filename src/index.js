@@ -42,11 +42,11 @@ async function run() {
   }
 
   //Retrieving previous render SHA to be able to update file content trough API
-  committer.sha = getSha(graphql, jsonFilename);
+  committer.sha = await getSha(graphql, jsonFilename);
   // Commit the new json file
   await commitFile(committer, jsonFilename, jsonFile);
 
-  committer.sha = getSha(graphql, svgFilename);
+  committer.sha = await getSha(graphql, svgFilename);
   await commitFile(committer, svgFilename, svgFile);
 }
 

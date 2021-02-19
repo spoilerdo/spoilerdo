@@ -23,7 +23,7 @@ jobs:
   gitlab-metrics:
     runs-on: ubuntu-latest
     steps:
-      - uses: spoilerdo/spoilerdo@v3
+      - uses: spoilerdo/spoilerdo@v2
         with:
           token: ${{ secrets.METRICS_TOKEN }}
           committer_token: ${{ secrets.GITHUB_TOKEN }}

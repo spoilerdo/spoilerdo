@@ -1,10 +1,13 @@
 const d3 = require('d3');
+const fs = require('fs');
 const d3Request = require('d3-request');
 const JSDOM = require('jsdom').JSDOM;
 const jsdom = new JSDOM('<!DOCTYPE html><html><body><div id="cal-heatmap"></div></body></html>', {
   runScripts: 'outside-only',
 });
 const document = jsdom.window.document;
+const css = fs.readFileSync(`${__dirname}/cal-heatmap.css`, {encoding:'utf8', flag:'r'});
+
 if (typeof fetch !== 'function') {
   global.fetch = require('node-fetch-polyfill');
 }
@@ -18,8 +21,6 @@ if (typeof fetch !== 'function') {
  */
 
 var CalHeatMap = function () {
-  'use strict';
-
   var self = this;
 
   this.allowedDataType = ['json', 'csv', 'tsv', 'txt'];
@@ -170,14 +171,14 @@ var CalHeatMap = function () {
     // null to disable, and use the default css styles
     //
     // Examples:
-    legendColors: {
-      min: 'green',
-      max: 'red',
-      empty: '#ffffff',
-      base: 'grey',
-      overflow: 'red',
-    },
-    //legendColors: null,
+    // legendColors: {
+    //   min: 'green',
+    //   max: 'red',
+    //   empty: '#ffffff',
+    //   base: 'grey',
+    //   overflow: 'red',
+    // },
+    legendColors: null,
 
     // ================================================
     // HIGHLIGHT
@@ -668,7 +669,10 @@ var CalHeatMap = function () {
       .select(document)
       .select(self.options.itemSelector)
       .append('svg')
-      .attr('class', 'cal-heatmap-container');
+      .attr('class', 'cal-heatmap-container')
+      .attr('xmlns', 'http://www.w3.org/2000/svg')
+
+    self.root.append('style').text(css);
 
     self.tooltip = d3
       .select(document)
@@ -1194,8 +1198,6 @@ CalHeatMap.prototype = {
    */
   /* jshint maxstatements:false */
   init: function (settings) {
-    'use strict';
-
     var parent = this;
 
     var options = (parent.options = mergeRecursive(parent.options, settings));
@@ -1473,7 +1475,7 @@ CalHeatMap.prototype = {
    * @return {array}       An array of Dates
    */
   expandDateSetting: function (value) {
-    'use strict';
+
 
     if (!Array.isArray(value)) {
       value = [value];
@@ -1494,7 +1496,6 @@ CalHeatMap.prototype = {
       });
   },
 
-  //TODO: this does not work something goes wrong!!
   /**
    * Fill the calendar by coloring the cells
    *
@@ -1503,8 +1504,6 @@ CalHeatMap.prototype = {
    * @return void
    */
   fill: function (svg) {
-    'use strict';
-
     var parent = this;
     var options = parent.options;
 
@@ -1556,8 +1555,6 @@ CalHeatMap.prototype = {
     }
 
     rect
-      .transition()
-      .duration(options.animationDuration)
       .select('rect')
       .attr('class', function (d) {
         var htmlClass = parent.getHighlightClassName(d.t).trim().split(' ');
@@ -1571,7 +1568,7 @@ CalHeatMap.prototype = {
             !options.considerMissingDataAsZero &&
             !options.legendColors.hasOwnProperty('base'))
         ) {
-          htmlClass.push('graph-rect');
+          htmlClass.push('graph-rect'); //graph-rect
         }
 
         if (sameDate) {
@@ -1590,13 +1587,12 @@ CalHeatMap.prototype = {
           htmlClass.push('hover_cursor');
         }
 
-        return htmlClass.join(' ');
+        const test = htmlClass.join(' ');
+        return test;
       })
       .call(addStyle);
 
     rect
-      .transition()
-      .duration(options.animationDuration)
       .select('title')
       .text(function (d) {
         return parent.getSubDomainTitle(d);
@@ -1616,8 +1612,6 @@ CalHeatMap.prototype = {
      * instead of the date
      */
     rect
-      .transition()
-      .duration(options.animationDuration)
       .select('text')
       .attr('class', function (d) {
         return 'subdomain-text' + parent.getHighlightClassName(d.t);
@@ -1638,7 +1632,7 @@ CalHeatMap.prototype = {
    * @return mixed	True when the triggering was skipped, false on error, else the callback function
    */
   triggerEvent: function (eventName, successArgs, skip) {
-    'use strict';
+
 
     if ((arguments.length === 3 && skip) || this.options[eventName] === null) {
       return true;
@@ -1662,7 +1656,7 @@ CalHeatMap.prototype = {
    * @param  int		itemNb	Number of items in that date
    */
   onClick: function (d, itemNb) {
-    'use strict';
+
 
     return this.triggerEvent('onClick', [d, itemNb]);
   },
@@ -1671,7 +1665,7 @@ CalHeatMap.prototype = {
    * Event triggered after drawing the calendar, byt before filling it with data
    */
   afterLoad: function () {
-    'use strict';
+
 
     return this.triggerEvent('afterLoad');
   },
@@ -1680,7 +1674,7 @@ CalHeatMap.prototype = {
    * Event triggered after completing drawing and filling the calendar
    */
   onComplete: function () {
-    'use strict';
+
 
     var response = this.triggerEvent('onComplete', [], this._completed);
     this._completed = true;
@@ -1694,7 +1688,7 @@ CalHeatMap.prototype = {
    * @param  Date		end		Domain end date
    */
   afterLoadPreviousDomain: function (start) {
-    'use strict';
+
 
     var parent = this;
     return this.triggerEvent('afterLoadPreviousDomain', function () {
@@ -1710,7 +1704,7 @@ CalHeatMap.prototype = {
    * @param  Date		end		Domain end date
    */
   afterLoadNextDomain: function (start) {
-    'use strict';
+
 
     var parent = this;
     return this.triggerEvent('afterLoadNextDomain', function () {
@@ -1725,7 +1719,7 @@ CalHeatMap.prototype = {
    * @param  boolean  reached True if the leftmost domain was reached
    */
   onMinDomainReached: function (reached) {
-    'use strict';
+
 
     this._minDomainReached = reached;
     return this.triggerEvent('onMinDomainReached', [reached]);
@@ -1737,14 +1731,14 @@ CalHeatMap.prototype = {
    * @param  boolean  reached True if the rightmost domain was reached
    */
   onMaxDomainReached: function (reached) {
-    'use strict';
+
 
     this._maxDomainReached = reached;
     return this.triggerEvent('onMaxDomainReached', [reached]);
   },
 
   checkIfMinDomainIsReached: function (date, upperBound) {
-    'use strict';
+
 
     if (this.minDomainIsReached(date)) {
       this.onMinDomainReached(true);
@@ -1758,7 +1752,7 @@ CalHeatMap.prototype = {
   },
 
   checkIfMaxDomainIsReached: function (date, lowerBound) {
-    'use strict';
+
 
     if (this.maxDomainIsReached(date)) {
       this.onMaxDomainReached(true);
@@ -1778,7 +1772,7 @@ CalHeatMap.prototype = {
   formatNumber: d3.format(',g'),
 
   formatDate: function (d, format) {
-    'use strict';
+
 
     if (arguments.length < 2) {
       format = 'title';
@@ -1793,7 +1787,7 @@ CalHeatMap.prototype = {
   },
 
   getSubDomainTitle: function (d) {
-    'use strict';
+
 
     if (d.v === null && !this.options.considerMissingDataAsZero) {
       return this.options.subDomainTitleFormat.empty.format({
@@ -1828,7 +1822,7 @@ CalHeatMap.prototype = {
    * @return bool True if the next domain was loaded, else false
    */
   loadNextDomain: function (n) {
-    'use strict';
+
 
     if (this._maxDomainReached || n === 0) {
       return false;
@@ -1851,7 +1845,7 @@ CalHeatMap.prototype = {
    * @return bool True if the previous domain was loaded, else false
    */
   loadPreviousDomain: function (n) {
-    'use strict';
+
 
     if (this._minDomainReached || n === 0) {
       return false;
@@ -1866,7 +1860,7 @@ CalHeatMap.prototype = {
   },
 
   loadNewDomains: function (direction, newDomains) {
-    'use strict';
+
 
     var parent = this;
     var backward = direction === this.NAVIGATE_LEFT;
@@ -1928,7 +1922,7 @@ CalHeatMap.prototype = {
    * @return bool True if the specified date correspond to the calendar upper bound
    */
   maxDomainIsReached: function (datetimestamp) {
-    'use strict';
+
 
     return this.options.maxDate !== null && this.options.maxDate.getTime() < datetimestamp;
   },
@@ -1940,7 +1934,7 @@ CalHeatMap.prototype = {
    * @return bool True if the specified date correspond to the calendar lower bound
    */
   minDomainIsReached: function (datetimestamp) {
-    'use strict';
+
 
     return this.options.minDate !== null && this.options.minDate.getTime() >= datetimestamp;
   },
@@ -1951,7 +1945,7 @@ CalHeatMap.prototype = {
    * @return Array a sorted array of timestamp
    */
   getDomainKeys: function () {
-    'use strict';
+
 
     return this._domains
       .keys()
@@ -1968,21 +1962,21 @@ CalHeatMap.prototype = {
   // =========================================================================//
 
   positionSubDomainX: function (d) {
-    'use strict';
+
 
     var index = this._domainType[this.options.subDomain].position.x(new Date(d));
     return index * this.options.cellSize + index * this.options.cellPadding;
   },
 
   positionSubDomainY: function (d) {
-    'use strict';
+
 
     var index = this._domainType[this.options.subDomain].position.y(new Date(d));
     return index * this.options.cellSize + index * this.options.cellPadding;
   },
 
   getSubDomainColumnNumber: function (d) {
-    'use strict';
+
 
     if (this.options.rowLimit > 0) {
       var i = this._domainType[this.options.subDomain].maxItemNumber;
@@ -2000,7 +1994,7 @@ CalHeatMap.prototype = {
   },
 
   getSubDomainRowNumber: function (d) {
-    'use strict';
+
 
     if (this.options.colLimit > 0) {
       var i = this._domainType[this.options.subDomain].maxItemNumber;
@@ -2024,7 +2018,7 @@ CalHeatMap.prototype = {
    * @return String the highlight class
    */
   getHighlightClassName: function (d) {
-    'use strict';
+
 
     d = new Date(d);
 
@@ -2046,7 +2040,7 @@ CalHeatMap.prototype = {
    * @return bool True if the date correspond to a subdomain cell
    */
   isNow: function (d) {
-    'use strict';
+
 
     return this.dateIsEqual(d, new Date());
   },
@@ -2062,7 +2056,7 @@ CalHeatMap.prototype = {
    */
   /* jshint maxcomplexity: false */
   dateIsEqual: function (dateA, dateB) {
-    'use strict';
+
 
     if (!(dateA instanceof Date)) {
       dateA = new Date(dateA);
@@ -2116,7 +2110,7 @@ CalHeatMap.prototype = {
    * @returns {boolean}
    */
   dateIsLessThan: function (dateA, dateB) {
-    'use strict';
+
 
     if (!(dateA instanceof Date)) {
       dateA = new Date(dateA);
@@ -2173,7 +2167,7 @@ CalHeatMap.prototype = {
    * @return int	Week number [0-53]
    */
   getWeekNumber: function (d) {
-    'use strict';
+
 
     var f = this.options.weekStartOnMonday === true ? d3.time.format('%W') : d3.time.format('%U');
     return f(d);
@@ -2186,7 +2180,7 @@ CalHeatMap.prototype = {
    * @return int Week number, relative to the month [0-5]
    */
   getMonthWeekNumber: function (d) {
-    'use strict';
+
 
     if (typeof d === 'number') {
       d = new Date(d);
@@ -2203,7 +2197,7 @@ CalHeatMap.prototype = {
    * @return int Number of weeks in the date's year
    */
   getWeekNumberInYear: function (d) {
-    'use strict';
+
 
     if (typeof d === 'number') {
       d = new Date(d);
@@ -2217,7 +2211,7 @@ CalHeatMap.prototype = {
    * @return int Number of days in the date's month
    */
   getDayCountInMonth: function (d) {
-    'use strict';
+
 
     return this.getEndOfMonth(d).getDate();
   },
@@ -2229,7 +2223,7 @@ CalHeatMap.prototype = {
    * @return int Number of days in the date's year
    */
   getDayCountInYear: function (d) {
-    'use strict';
+
 
     if (typeof d === 'number') {
       d = new Date(d);
@@ -2247,7 +2241,7 @@ CalHeatMap.prototype = {
    * @return int The week day number (0-6)
    */
   getWeekDay: function (d) {
-    'use strict';
+
 
     if (this.options.weekStartOnMonday === false) {
       return d.getDay();
@@ -2261,7 +2255,7 @@ CalHeatMap.prototype = {
    * @return Date			Last day of the month
    */
   getEndOfMonth: function (d) {
-    'use strict';
+
 
     if (typeof d === 'number') {
       d = new Date(d);
@@ -2277,7 +2271,7 @@ CalHeatMap.prototype = {
    * @return Date
    */
   jumpDate: function (date, count, step) {
-    'use strict';
+
 
     var d = new Date(date);
     switch (step) {
@@ -2312,7 +2306,7 @@ CalHeatMap.prototype = {
    * @return array	An array of minutes
    */
   getMinuteDomain: function (d, range) {
-    'use strict';
+
 
     var start = new Date(d.getFullYear(), d.getMonth(), d.getDate(), d.getHours());
     var stop = null;
@@ -2332,7 +2326,7 @@ CalHeatMap.prototype = {
    * @return array	An array of hours
    */
   getHourDomain: function (d, range) {
-    'use strict';
+
 
     var start = new Date(d.getFullYear(), d.getMonth(), d.getDate(), d.getHours());
     var stop = null;
@@ -2375,7 +2369,7 @@ CalHeatMap.prototype = {
    * @return array	An array of weeks
    */
   getDayDomain: function (d, range) {
-    'use strict';
+
 
     var start = new Date(d.getFullYear(), d.getMonth(), d.getDate());
     var stop = null;
@@ -2397,7 +2391,7 @@ CalHeatMap.prototype = {
    * @return array	An array of weeks
    */
   getWeekDomain: function (d, range) {
-    'use strict';
+
 
     var weekStart;
 
@@ -2434,7 +2428,7 @@ CalHeatMap.prototype = {
    * @return array	An array of months
    */
   getMonthDomain: function (d, range) {
-    'use strict';
+
 
     var start = new Date(d.getFullYear(), d.getMonth());
     var stop = null;
@@ -2456,7 +2450,7 @@ CalHeatMap.prototype = {
    * @return array	An array of hours
    */
   getYearDomain: function (d, range) {
-    'use strict';
+
 
     var start = new Date(d.getFullYear(), 0);
     var stop = null;
@@ -2477,7 +2471,7 @@ CalHeatMap.prototype = {
    * @return Array of dates
    */
   getDomain: function (date, range) {
-    'use strict';
+
 
     if (typeof date === 'number') {
       date = new Date(date);
@@ -2514,7 +2508,7 @@ CalHeatMap.prototype = {
 
   /* jshint maxcomplexity: false */
   getSubDomain: function (date) {
-    'use strict';
+
 
     if (typeof date === 'number') {
       date = new Date(date);
@@ -2609,7 +2603,7 @@ CalHeatMap.prototype = {
    * @return Date The start date of the wanted domain
    */
   getNextDomain: function (n) {
-    'use strict';
+
 
     if (arguments.length === 0) {
       n = 1;
@@ -2623,7 +2617,7 @@ CalHeatMap.prototype = {
    * @return Date The start date of the wanted domain
    */
   getPreviousDomain: function (n) {
-    'use strict';
+
 
     if (arguments.length === 0) {
       n = 1;
@@ -2650,7 +2644,7 @@ CalHeatMap.prototype = {
    * - False if data are loaded asynchronously
    */
   getDatas: function (source, startDate, endDate, callback, afterLoad, updateMode) {
-    'use strict';
+
 
     var self = this;
     if (arguments.length < 5) {
@@ -2732,7 +2726,7 @@ CalHeatMap.prototype = {
    * @return void
    */
   parseDatas: function (data, updateMode, startDate, endDate) {
-    'use strict';
+
 
     if (updateMode === this.RESET_ALL_ON_UPDATE) {
       this._domains.forEach(function (key, value) {
@@ -2794,7 +2788,7 @@ CalHeatMap.prototype = {
   },
 
   parseURI: function (str, startDate, endDate) {
-    'use strict';
+
 
     // Use a timestamp in seconds
     str = str.replace(/\{\{t:start\}\}/g, startDate.getTime() / 1000);
@@ -2808,7 +2802,7 @@ CalHeatMap.prototype = {
   },
 
   interpretCSV: function (data) {
-    'use strict';
+
 
     var d = {};
     var keys = Object.keys(data[0]);
@@ -2829,7 +2823,7 @@ CalHeatMap.prototype = {
    * @return void
    */
   resize: function () {
-    'use strict';
+
 
     var parent = this;
     var options = parent.options;
@@ -2888,7 +2882,7 @@ CalHeatMap.prototype = {
    * Shift the calendar forward
    */
   next: function (n) {
-    'use strict';
+
 
     if (arguments.length === 0) {
       n = 1;
@@ -2900,7 +2894,7 @@ CalHeatMap.prototype = {
    * Shift the calendar backward
    */
   previous: function (n) {
-    'use strict';
+
 
     if (arguments.length === 0) {
       n = 1;
@@ -2920,7 +2914,7 @@ CalHeatMap.prototype = {
    * @param bool True of the calendar was scrolled
    */
   jumpTo: function (date, reset) {
-    'use strict';
+
 
     if (arguments.length < 2) {
       reset = false;
@@ -2951,7 +2945,7 @@ CalHeatMap.prototype = {
    * @return void
    */
   rewind: function () {
-    'use strict';
+
 
     this.jumpTo(this.options.start, true);
   },
@@ -2964,7 +2958,7 @@ CalHeatMap.prototype = {
    * if you don't want to use the afterLoad() callback
    */
   update: function (dataSource, afterLoad, updateMode) {
-    'use strict';
+
 
     if (arguments.length < 2) {
       afterLoad = true;
@@ -2994,7 +2988,7 @@ CalHeatMap.prototype = {
    * @param array colorRange an array of 2 hex colors, for the minimum and maximum colors
    */
   setLegend: function () {
-    'use strict';
+
 
     var oldLegend = this.options.legend.slice(0);
     if (arguments.length >= 1 && Array.isArray(arguments[0])) {
@@ -3022,7 +3016,7 @@ CalHeatMap.prototype = {
    * @return bool False if there is no legend to remove
    */
   removeLegend: function () {
-    'use strict';
+
 
     if (!this.options.displayLegend) {
       return false;
@@ -3038,7 +3032,7 @@ CalHeatMap.prototype = {
    * @return bool False if the legend was already displayed
    */
   showLegend: function () {
-    'use strict';
+
 
     if (this.options.displayLegend) {
       return false;
@@ -3058,7 +3052,7 @@ CalHeatMap.prototype = {
    * @return bool True if dates were highlighted
    */
   highlight: function (args) {
-    'use strict';
+
 
     if ((this.options.highlight = this.expandDateSetting(args)).length > 0) {
       this.fill();
@@ -3077,7 +3071,7 @@ CalHeatMap.prototype = {
    * @return null
    */
   destroy: function (callback) {
-    'use strict';
+
 
     this.root
       .transition()
@@ -3097,7 +3091,7 @@ CalHeatMap.prototype = {
   },
 
   getSVG: function () {
-    'use strict';
+
 
     var styles = {
       '.cal-heatmap-container': {},
@@ -3233,39 +3227,39 @@ CalHeatMap.prototype = {
  * Compute the position of a domain, relative to the calendar
  */
 var DomainPosition = function () {
-  'use strict';
+
 
   this.positions = d3.map();
 };
 
 DomainPosition.prototype.getPosition = function (d) {
-  'use strict';
+
 
   return this.positions.get(d);
 };
 
 DomainPosition.prototype.getPositionFromIndex = function (i) {
-  'use strict';
+
 
   var domains = this.getKeys();
   return this.positions.get(domains[i]);
 };
 
 DomainPosition.prototype.getLast = function () {
-  'use strict';
+
 
   var domains = this.getKeys();
   return this.positions.get(domains[domains.length - 1]);
 };
 
 DomainPosition.prototype.setPosition = function (d, dim) {
-  'use strict';
+
 
   this.positions.set(d, dim);
 };
 
 DomainPosition.prototype.shiftRightBy = function (exitingDomainDim) {
-  'use strict';
+
 
   this.positions.forEach(function (key, value) {
     this.set(key, value - exitingDomainDim);
@@ -3276,7 +3270,7 @@ DomainPosition.prototype.shiftRightBy = function (exitingDomainDim) {
 };
 
 DomainPosition.prototype.shiftLeftBy = function (enteringDomainDim) {
-  'use strict';
+
 
   this.positions.forEach(function (key, value) {
     this.set(key, value + enteringDomainDim);
@@ -3287,7 +3281,7 @@ DomainPosition.prototype.shiftLeftBy = function (enteringDomainDim) {
 };
 
 DomainPosition.prototype.getKeys = function () {
-  'use strict';
+
 
   return this.positions.keys().sort(function (a, b) {
     return parseInt(a, 10) - parseInt(b, 10);
@@ -3299,7 +3293,7 @@ DomainPosition.prototype.getKeys = function () {
 // =========================================================================//
 
 var Legend = function (calendar) {
-  'use strict';
+
 
   this.calendar = calendar;
   this.computeDim();
@@ -3310,7 +3304,7 @@ var Legend = function (calendar) {
 };
 
 Legend.prototype.computeDim = function () {
-  'use strict';
+
 
   var options = this.calendar.options; // Shorter accessor for variable name mangling when minifying
   this.dim = {
@@ -3320,14 +3314,14 @@ Legend.prototype.computeDim = function () {
 };
 
 Legend.prototype.remove = function () {
-  'use strict';
+
 
   this.calendar.root.select('.graph-legend').remove();
   this.calendar.resize();
 };
 
 Legend.prototype.redraw = function (width) {
-  'use strict';
+
 
   if (!this.calendar.options.displayLegend) {
     return false;
@@ -3490,7 +3484,7 @@ Legend.prototype.redraw = function (width) {
  * @return int height or width in pixels
  */
 Legend.prototype.getDim = function (axis) {
-  'use strict';
+
 
   var isHorizontal = this.calendar.options.legendOrientation === 'horizontal';
 
@@ -3503,7 +3497,7 @@ Legend.prototype.getDim = function (axis) {
 };
 
 Legend.prototype.buildColors = function () {
-  'use strict';
+
 
   var options = this.calendar.options; // Shorter accessor for variable name mangling when minifying
 
@@ -3555,7 +3549,7 @@ Legend.prototype.buildColors = function () {
  * @return string Classname according to the legend
  */
 Legend.prototype.getClass = function (n, withCssClass) {
-  'use strict';
+
 
   if (n === null || isNaN(n)) {
     return '';
@@ -3589,7 +3583,7 @@ Legend.prototype.getClass = function (n, withCssClass) {
  * @return String
  */
 String.prototype.format = function () {
-  'use strict';
+
 
   var formatted = this;
   for (var prop in arguments[0]) {
@@ -3605,7 +3599,7 @@ String.prototype.format = function () {
  * #source http://stackoverflow.com/a/383245/805649
  */
 function mergeRecursive(obj1, obj2) {
-  'use strict';
+
 
   /*jshint forin:false */
   for (var p in obj2) {
@@ -3633,7 +3627,7 @@ function mergeRecursive(obj1, obj2) {
  * @return bool true of the 2 arrays are equals
  */
 function arrayEquals(arrayA, arrayB) {
-  'use strict';
+
 
   // if the other array is a falsy value, return
   if (!arrayB || !arrayA) {
@@ -3665,7 +3659,6 @@ function arrayEquals(arrayA, arrayB) {
  */
 if (typeof define === 'function' && define.amd) {
   define(['d3'], function () {
-    'use strict';
 
     return CalHeatMap;
   });

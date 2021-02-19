@@ -41,13 +41,17 @@ async function run() {
     core.info('Committer account: (github-actions)');
   }
 
-  //Retrieving previous render SHA to be able to update file content trough API
-  committer.sha = await getSha(graphql, jsonFilename);
-  // Commit the new json file
-  await commitFile(committer, jsonFilename, jsonFile);
+  if(jsonFile) {
+    //Retrieving previous render SHA to be able to update file content trough API
+    committer.sha = await getSha(graphql, jsonFilename);
+    // Commit the new json file
+    await commitFile(committer, jsonFilename, jsonFile);
+  }
 
-  committer.sha = await getSha(graphql, svgFilename);
-  await commitFile(committer, svgFilename, svgFile);
+  if(svgFile) {
+    committer.sha = await getSha(graphql, svgFilename);
+    await commitFile(committer, svgFilename, svgFile);
+  }
 }
 
 async function getSha(graphql, filename) {
@@ -83,7 +87,7 @@ async function commitFile(committer, filename, file) {
       branch: committer.branch,
       ...(committer.sha ? { sha: committer.sha } : {}),
     });
-    core.info('Commit to repository: success!');
+    core.info(`Commit: ${filename} to repository: success!`);
   } catch (error) {
     core.info(error);
   }

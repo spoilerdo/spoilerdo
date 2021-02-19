@@ -2,7 +2,7 @@ const CalHeatMap = require('./cal-heatmap/cal-heatmap');
 
 /**
  * Generate a heatmap by using the altered cal-heatmap library.
- * The library supports server side rendering by using a DOM emulator INSIDE... a DOM emulator. Genius!!
+ * The library supports server side rendering by using a DOM emulator INSIDE... a DOM emulator. BIG BRAIN??
  */
 function generateHeatmap() {
   var cal = new CalHeatMap();

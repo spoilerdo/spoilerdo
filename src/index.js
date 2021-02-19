@@ -1,5 +1,6 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
+const { cp } = require('@actions/io');
 const octokit = require('@octokit/graphql');
 const generateJson = require('./gitlab-calendar');
 const generateHeatmap = require('./heatmap-generator');
@@ -41,7 +42,16 @@ async function run() {
   }
 
   //Retrieving previous render SHA to be able to update file content trough API
-  committer.sha = null;
+  committer.sha = getSha(graphql, jsonFilename);
+  // Commit the new json file
+  await commitFile(committer, jsonFilename, jsonFile);
+
+  committer.sha = getSha(graphql, svgFilename);
+  await commitFile(committer, svgFilename, svgFile);
+}
+
+async function getSha(graphql, filename) {
+  let sha = null;
   try {
     const {
       repository: {
@@ -50,33 +60,17 @@ async function run() {
     } = await graphql(
       `query Sha {
         repository(owner: "${github.context.repo.owner}", name: "${github.context.repo.repo}") {
-          object(expression: "${committer.branch}:${svgFilename}") { ... on Blob { oid } }
+          object(expression: "${committer.branch}:${filename}") { ... on Blob { oid } }
         }
       }`,
       { headers: { authorization: `token ${committer.token}` } }
     );
-    committer.sha = oid;
+    sha = oid;
   } catch (error) {
     core.info(error);
   }
   core.info(`Previous render sha: ${committer.sha ? committer.sha : '(none)'}`);
-
-  // Commit the new json file
-  await commitFile(committer, jsonFilename, jsonFile);
-  await commitFile(committer, svgFilename, svgFile);
-  // try {
-  //   await committer.rest.repos.createOrUpdateFileContents({
-  //     ...github.context.repo,
-  //     path: jsonFilename,
-  //     message: `Update ${jsonFilename} - [Skip GitHub Action]`,
-  //     content: Buffer.from(file).toString('base64'),
-  //     branch: committer.branch,
-  //     ...(committer.sha ? { sha: committer.sha } : {}),
-  //   });
-  //   core.info('Commit to repository: success!');
-  // } catch (error) {
-  //   core.info(error);
-  // }
+  return sha;
 }
 
 async function commitFile(committer, filename, file) {

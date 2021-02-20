@@ -1,6 +1,5 @@
 const d3 = require('d3');
 const fs = require('fs');
-const d3Request = require('d3-request');
 const JSDOM = require('jsdom').JSDOM;
 const jsdom = new JSDOM('<!DOCTYPE html><html><body><div id="cal-heatmap"></div></body></html>', {
   runScripts: 'outside-only',
@@ -2597,16 +2596,16 @@ CalHeatMap.prototype = {
 
           switch (this.options.dataType) {
             case 'json':
-              d3Request.json(url, _callback).send(requestType, payload);
+              d3.json(url, _callback).send(requestType, payload);
               break;
             case 'csv':
-              d3Request.csv(url, _callback).send(requestType, payload);
+              d3.csv(url, _callback).send(requestType, payload);
               break;
             case 'tsv':
-              d3Request.tsv(url, _callback).send(requestType, payload);
+              d3.tsv(url, _callback).send(requestType, payload);
               break;
             case 'txt':
-              d3Request.text(url, 'text/plain', _callback).send(requestType, payload);
+              d3.text(url, 'text/plain', _callback).send(requestType, payload);
               break;
           }
         }

@@ -15,7 +15,7 @@ async function run() {
 
   //Get the Gitlab JSON data
   const jsonFile = await generateJson();
-  const svgFile = generateHeatmap();
+  const svgFile = await generateHeatmap();
 
   //Extract octokits
   const api = {};

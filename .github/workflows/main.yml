@@ -3,8 +3,10 @@ name: Metrics
 on:
   # Schedule updates
   schedule: [{cron: "0 0 * * 5"}]
-  # Manual trigger
-  workflow_dispatch:
+  # Start when pushing to master
+  push:
+    branches:
+      - master
 jobs:
   github-metrics:
     runs-on: ubuntu-latest

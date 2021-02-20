@@ -7,7 +7,9 @@ const d3Fetch = require('d3-fetch');
  */
 async function generateHeatmap(url) {
   return await d3Fetch.json(url).then((d) => {
-    if(!d) { return; }
+    if (!d) {
+      return;
+    }
 
     var cal = new CalHeatMap();
     cal.init({
@@ -15,14 +17,14 @@ async function generateHeatmap(url) {
       domain: 'year',
       subDomain: 'day',
       data: d,
-      start: new Date(2020, 0),
+      start: new Date(2021, 0),
       cellSize: 10,
       range: 1,
-      legend: [2, 4, 10, 20],
+      legend: [2, 4, 10, 20, 40],
     });
-  
+
     return cal.getDom().getElementById('cal-heatmap').innerHTML;
-  })
+  });
 }
 
 module.exports = generateHeatmap;

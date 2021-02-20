@@ -49,6 +49,7 @@ async function run() {
   }
 
   if(svgFile) {
+    core.info(svgFile);
     committer.sha = await getSha(committer, graphql, svgFilename);
     await commitFile(committer, svgFilename, svgFile);
   }

@@ -5,7 +5,7 @@ const jsdom = new JSDOM('<!DOCTYPE html><html><body><div id="cal-heatmap"></div>
   runScripts: 'outside-only',
 });
 const document = jsdom.window.document;
-const css = fs.readFileSync(`${__dirname}/cal-heatmap.css`, {encoding:'utf8', flag:'r'});
+const css = fs.readFileSync(`${__dirname}/cal-heatmap.css`, { encoding: 'utf8', flag: 'r' });
 
 if (typeof fetch !== 'function') {
   global.fetch = require('node-fetch-polyfill');
@@ -669,7 +669,7 @@ var CalHeatMap = function () {
       .select(self.options.itemSelector)
       .append('svg')
       .attr('class', 'cal-heatmap-container')
-      .attr('xmlns', 'http://www.w3.org/2000/svg')
+      .attr('xmlns', 'http://www.w3.org/2000/svg');
 
     self.root.append('style').text(css);
 
@@ -681,7 +681,13 @@ var CalHeatMap = function () {
         return (current !== null ? current : '') + 'position:relative;';
       });
 
-    self.root.attr('x', 0).attr('y', 0).append('svg').attr('class', 'graph');
+    self.root
+      .attr('x', 0)
+      .attr('y', 0)
+      .attr('width', '100%')
+      .attr('height', '150px')
+      .append('svg')
+      .attr('class', 'graph');
 
     self.Legend = new Legend(self);
 
@@ -1472,8 +1478,6 @@ CalHeatMap.prototype = {
    * @return {array}       An array of Dates
    */
   expandDateSetting: function (value) {
-
-
     if (!Array.isArray(value)) {
       value = [value];
     }
@@ -1589,11 +1593,9 @@ CalHeatMap.prototype = {
       })
       .call(addStyle);
 
-    rect
-      .select('title')
-      .text(function (d) {
-        return parent.getSubDomainTitle(d);
-      });
+    rect.select('title').text(function (d) {
+      return parent.getSubDomainTitle(d);
+    });
 
     function formatSubDomainText(element) {
       if (typeof options.subDomainTextFormat === 'function') {

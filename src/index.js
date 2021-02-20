@@ -1,6 +1,5 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
-const { cp } = require('@actions/io');
 const octokit = require('@octokit/graphql');
 const generateJson = require('./gitlab-calendar');
 const generateHeatmap = require('./heatmap-generator');
@@ -12,10 +11,11 @@ async function run() {
   const _token = core.getInput('committer_token', { required: true });
   const jsonFilename = core.getInput('json-filename', { required: true });
   const svgFilename = core.getInput('svg-filename', { required: true });
+  const heatmapDataUrl = core.getInput('heatmap-data-url', { required: true });
 
   //Get the Gitlab JSON data
   const jsonFile = await generateJson();
-  const svgFile = await generateHeatmap();
+  const svgFile = await generateHeatmap(heatmapDataUrl);
 
   //Extract octokits
   const api = {};

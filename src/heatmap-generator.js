@@ -5,8 +5,7 @@ const d3Fetch = require('d3-fetch');
  * Generate a heatmap by using the altered cal-heatmap library.
  * The library supports server side rendering by using a DOM emulator INSIDE... a DOM emulator. BIG BRAIN??
  */
-async function generateHeatmap(_callback) {
-  const url = "https://raw.githubusercontent.com/spoilerdo/spoilerdo/master/gitlab-metrics-data.json";
+async function generateHeatmap(url) {
   return await d3Fetch.json(url).then((d) => {
     if(!d) { return; }
 

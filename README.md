@@ -35,7 +35,7 @@ Off course this can be used for more than that.
 # Gitlab Activity
 Here a nice auto generated graph of my ![gitlab activity]("https://gitlab.com/martijn.dormans").
 
-![Gitlab-Heatmap](https://raw.githubusercontent.com/spoilerdo/spoilerdo/master/gitlab-metrics.svg | width=638)
+<img alt="gitlab-heatmap" width="638px" src="https://raw.githubusercontent.com/spoilerdo/spoilerdo/master/gitlab-metrics.svg">
 
 ## Other projects
 If you want to see more of the projects I did with my classmates at university or on my own check the repositories below.

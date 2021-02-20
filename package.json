@@ -11,6 +11,7 @@
   },
   "author": "Martijn Dormans",
   "jest": {
+    "testEnvironment": "jsdom",
     "testTimeout": 30000
   },
   "dependencies": {
@@ -19,10 +20,25 @@
     "@actions/io": "^1.0.2",
     "@octokit/graphql": "^4.6.0",
     "axios": "^0.21.1",
-    "jest": "^26.6.3"
+    "cal-heatmap": "^3.6.2",
+    "d3": "^3.5.6",
+    "d3-fetch": "^2.0.0",
+    "jest": "^26.6.3",
+    "jsdom": "^16.4.0",
+    "node-fetch-polyfill": "^2.0.6"
   },
   "devDependencies": {
     "@vercel/ncc": "^0.27.0",
     "eslint": "^7.4.0"
+  },
+  "volo": {
+    "dependencies": {
+      "d3": "d3"
+    }
+  },
+  "jam": {
+    "dependencies": {
+      "d3": "^3.0.6"
+    }
   }
 }

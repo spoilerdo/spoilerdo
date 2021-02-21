@@ -41,20 +41,23 @@ async function run() {
     core.info('Committer account: (github-actions)');
   }
 
-  if(jsonFile) {
-    //Retrieving previous render SHA to be able to update file content trough API
+  if (jsonFile) {
     committer.sha = await getSha(committer, graphql, jsonFilename);
-    // Commit the new json file
     await commitFile(committer, jsonFilename, jsonFile);
   }
 
-  if(svgFile) {
-    core.info(svgFile);
+  if (svgFile) {
     committer.sha = await getSha(committer, graphql, svgFilename);
     await commitFile(committer, svgFilename, svgFile);
   }
 }
 
+/**
+ * Retrieve previous render SHA to be able to update file content trough API
+ * @param {object} committer to commit the file to
+ * @param {import('@octokit/graphql/dist-types/types').graphql} graphql github endpoint to get the SHA from
+ * @param {string} filename
+ */
 async function getSha(committer, graphql, filename) {
   let sha = null;
   try {
@@ -78,6 +81,12 @@ async function getSha(committer, graphql, filename) {
   return sha;
 }
 
+/**
+ * Commit a file to the repository
+ * @param {object} committer to commit the file to
+ * @param {string} filename of the file you want to commit
+ * @param {string} file you want to commit
+ */
 async function commitFile(committer, filename, file) {
   try {
     await committer.rest.repos.createOrUpdateFileContents({

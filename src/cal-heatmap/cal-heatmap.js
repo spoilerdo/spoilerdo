@@ -17,6 +17,8 @@ if (typeof fetch !== 'function') {
  *  https://github.com/wa0x6e/cal-heatmap
  *  Licensed under the MIT license
  *  Copyright 2014 Wan Qi Chen
+ *
+ *  Modified for server side rendering (21-02-2021)
  */
 
 var CalHeatMap = function () {
@@ -684,7 +686,7 @@ var CalHeatMap = function () {
     self.root
       .attr('x', 0)
       .attr('y', 0)
-      .attr('width', '100%')
+      .attr('width', '638px')
       .attr('height', '150px')
       .append('svg')
       .attr('class', 'graph');

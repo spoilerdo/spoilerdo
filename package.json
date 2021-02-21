@@ -30,15 +30,5 @@
   "devDependencies": {
     "@vercel/ncc": "^0.27.0",
     "eslint": "^7.4.0"
-  },
-  "volo": {
-    "dependencies": {
-      "d3": "d3"
-    }
-  },
-  "jam": {
-    "dependencies": {
-      "d3": "^3.0.6"
-    }
   }
 }

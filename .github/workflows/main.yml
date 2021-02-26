@@ -3,6 +3,8 @@ name: Metrics
 on:
   # Schedule updates
   schedule: [{cron: "0 0 * * 5"}]
+  # Manual trigger
+  workflow_dispatch:
 jobs:
   github-metrics:
     runs-on: ubuntu-latest
@@ -23,7 +25,7 @@ jobs:
   gitlab-metrics:
     runs-on: ubuntu-latest
     steps:
-      - uses: spoilerdo/spoilerdo@v4
+      - uses: spoilerdo/spoilerdo@v5
         with:
           token: ${{ secrets.METRICS_TOKEN }}
           committer_token: ${{ secrets.GITHUB_TOKEN }}

@@ -2,7 +2,7 @@ const core = require('@actions/core');
 const github = require('@actions/github');
 const octokit = require('@octokit/graphql');
 const generateJson = require('./gitlab-calendar');
-const generateHeatmap = require('./heatmap-generator');
+const generateHeatmap = require('./heatmap-generator.js');
 
 //Inspired by lowlighter/metrics repo (https://github.com/lowlighter/metrics/blob/master/source/app/action/index.mjs)
 async function run() {
@@ -11,11 +11,10 @@ async function run() {
   const _token = core.getInput('committer_token', { required: true });
   const jsonFilename = core.getInput('json-filename', { required: true });
   const svgFilename = core.getInput('svg-filename', { required: true });
-  const heatmapDataUrl = core.getInput('heatmap-data-url', { required: true });
 
   //Get the Gitlab JSON data
   const jsonFile = await generateJson();
-  const svgFile = await generateHeatmap(heatmapDataUrl);
+  const svgFile = generateHeatmap(jsonFile);
 
   //Extract octokits
   const api = {};
@@ -43,7 +42,7 @@ async function run() {
 
   if (jsonFile) {
     committer.sha = await getSha(committer, graphql, jsonFilename);
-    await commitFile(committer, jsonFilename, jsonFile);
+    await commitFile(committer, jsonFilename, JSON.stringify(jsonFile));
   }
 
   if (svgFile) {

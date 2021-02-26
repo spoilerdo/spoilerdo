@@ -22,7 +22,6 @@
     "axios": "^0.21.1",
     "cal-heatmap": "^3.6.2",
     "d3": "^3.5.6",
-    "d3-fetch": "^2.0.0",
     "jest": "^26.6.3",
     "jsdom": "^16.4.0",
     "node-fetch-polyfill": "^2.0.6"

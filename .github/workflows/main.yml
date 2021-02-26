@@ -25,10 +25,9 @@ jobs:
   gitlab-metrics:
     runs-on: ubuntu-latest
     steps:
-      - uses: spoilerdo/spoilerdo@v4
+      - uses: spoilerdo/spoilerdo@v5
         with:
           token: ${{ secrets.METRICS_TOKEN }}
           committer_token: ${{ secrets.GITHUB_TOKEN }}
           json-filename: gitlab-metrics-data.json
           svg-filename: gitlab-metrics.svg
-          heatmap-data-url: https://raw.githubusercontent.com/spoilerdo/spoilerdo/master/gitlab-metrics-data.json

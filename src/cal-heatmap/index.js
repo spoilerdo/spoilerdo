@@ -1,7 +1,9 @@
 const d3 = require('d3');
 const fs = require('fs');
 const JSDOM = require('jsdom').JSDOM;
-const jsdom = new JSDOM('<!DOCTYPE html><html><body><div id="cal-heatmap"></div></body></html>', {
+
+const HEATMAP_CONT_ID = 'cal-heatmap';
+const jsdom = new JSDOM(`<!DOCTYPE html><html><body><div id="${HEATMAP_CONT_ID}"></div></body></html>`, {
   runScripts: 'outside-only',
 });
 const document = jsdom.window.document;
@@ -3488,15 +3490,7 @@ function arrayEquals(arrayA, arrayB) {
   return true;
 }
 
-/**
- * AMD Loader
- */
-if (typeof define === 'function' && define.amd) {
-  define(['d3'], function () {
-    return CalHeatMap;
-  });
-} else if (typeof module === 'object' && module.exports) {
-  module.exports = CalHeatMap;
-} else {
-  window.CalHeatMap = CalHeatMap;
-}
+module.exports = {
+  CalHeatMap,
+  HEATMAP_CONT_ID,
+};

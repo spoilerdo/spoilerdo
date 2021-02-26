@@ -11,11 +11,10 @@ async function run() {
   const _token = core.getInput('committer_token', { required: true });
   const jsonFilename = core.getInput('json-filename', { required: true });
   const svgFilename = core.getInput('svg-filename', { required: true });
-  const heatmapDataUrl = core.getInput('heatmap-data-url', { required: true });
 
   //Get the Gitlab JSON data
   const jsonFile = await generateJson();
-  const svgFile = await generateHeatmap(heatmapDataUrl);
+  const svgFile = generateHeatmap(jsonFile);
 
   //Extract octokits
   const api = {};

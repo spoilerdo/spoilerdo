@@ -1,4 +1,4 @@
-# I like coding!!!
+# Overview
 Hey, welcome to my github page, enjoy your stay.
 <br>
 Currently working at ehvLINC on a project called ![Suitless]("https://gitlab.com/suitless"). 
@@ -27,15 +27,15 @@ Also doing my last year of software engineering at Fontys University of Applied 
 ![Metrics](https://metrics.lecoq.io/spoilerdo?template=classic&base.activity=0&base.community=0&base.repositories=0&base.metadata=0&languages=1&config.timezone=Europe%2FBerlin)
 
 # Suitless
-This is one of the biggest projects I am working on with my colleges.
+This is one of the biggest projects we (my colleges and I) worked on.
 You can check it out on ![gitlab]("https://gitlab.com/suitless").
-It is a tool editor that can create dynamic questionnaires people can fill in to get personalized advice about a certain topic. Currently it is being used to give startup companies information about legal issue, for instance Privacy and Intellectual Property.
-Off course this can be used for more than that.
+The project is a flowchart editor that can create dynamic questionnaires people can fill in to get personalized advice about a certain topic. Currently it is being used to give startup companies information about legal issues, for instance: Privacy and Intellectual Property.
+But the applications for this project is limitless.
 
 # Gitlab Activity
-Here a nice auto generated graph of my ![gitlab activity]("https://gitlab.com/martijn.dormans").
+Beceause I work a lot on Gitlab I made an auto generated graph of my ![gitlab activity]("https://gitlab.com/martijn.dormans").
 
 <img alt="gitlab-heatmap" width="100%" src="https://raw.githubusercontent.com/spoilerdo/spoilerdo/master/gitlab-metrics.svg">
 
 ## Other projects
-If you want to see more of the projects I did with my classmates at university or on my own check the repositories below.
+If you want to see more projects I did with my classmates at university or on my own check the repositories below.

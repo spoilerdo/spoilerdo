@@ -12,13 +12,18 @@ function generateHeatmap(json) {
     domain: 'year',
     subDomain: 'day',
     data: json,
-    start: new Date(2021, 0),
+    start: getStartDate(json),
     cellSize: 10,
     range: 1,
     legend: [2, 4, 10, 20, 40],
   });
 
   return cal.getDom().getElementById(HEATMAP_CONT_ID).innerHTML;
+}
+
+function getStartDate(json) {
+  const seconds = Object.keys(json)[0] * 1000;
+  return new Date(seconds);
 }
 
 module.exports = generateHeatmap;

@@ -9,7 +9,13 @@ async function generateJson() {
       core.setFailed('no gitlab metrics found');
     }
 
-    const json = response.data;
+    const rawJson = response.data;
+    const json = Object.keys(rawJson)
+      .sort()
+      .reduce((obj, key) => {
+        obj[key] = rawJson[key];
+        return obj;
+      }, {});
     let newJson = {};
     for (const [key, value] of Object.entries(json)) {
       const date = new Date(key);

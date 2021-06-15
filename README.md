@@ -24,6 +24,8 @@ Also doing my last year of software engineering at Fontys University of Applied 
 
 <br><br><br>
 
+Link to my [developing stack]("./../stack/Software.md")
+
 ![Metrics](https://metrics.lecoq.io/spoilerdo?template=classic&base.activity=0&base.community=0&base.repositories=0&base.metadata=0&languages=1&config.timezone=Europe%2FBerlin)
 
 # Suitless

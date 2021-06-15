@@ -9,6 +9,7 @@ async function run() {
   //Inputs
   const token = core.getInput('token', { required: true });
   const _token = core.getInput('committer_token', { required: true });
+  const gitlabToken = core.getInput('gitlab_token', { required: true });
   const jsonFilename = core.getInput('json-filename', { required: true });
   const svgFilename = core.getInput('svg-filename', { required: true });
 

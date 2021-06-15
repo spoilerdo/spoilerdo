@@ -1,9 +1,10 @@
 const core = require('@actions/core');
 const webrequest = require('./webrequest');
 
-async function generateJson() {
+async function generateJson(token) {
   try {
-    const response = await webrequest('https://gitlab.com/users/martijn.dormans/calendar.json', 'GET');
+    // TODO: you are not logged in so the private commits will not be seen :(
+    const response = await webrequest(`https://gitlab.com/users/martijn.dormans/calendar.json?`, 'GET', token);
 
     if (!response.data) {
       core.setFailed('no gitlab metrics found');
@@ -30,4 +31,5 @@ async function generateJson() {
   }
 }
 
-module.exports = generateJson;
+//module.exports = generateJson;
+generateJson('xRDfv3s6K78QGnMaQC2c');

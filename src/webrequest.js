@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-async function webrequest(url, method) {
+async function webrequest(url, method, token) {
   const config = {
     url,
     method,

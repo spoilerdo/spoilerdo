@@ -38,6 +38,9 @@
         "wayou.vscode-todo-highlight",
         "ms-vscode.vscode-typescript-tslint-plugin",
         "vscode-icons-team.vscode-icons",
-        "redhat.vscode-yaml"
+        "redhat.vscode-yaml",
+        "bencoleman.armview",
+        "johnpapa.vscode-peacock",
+        "pnp.polacode"
     ]
 }

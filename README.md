@@ -1,8 +1,11 @@
 # Overview
-Hey, welcome to my github page, enjoy your stay.
+
+## Hey, welcome to my github page, enjoy your stay 🙌
+
+Software Engineer with a passion to make the best and most efficient solution for a problem. I prioritize efficiency over specific tools, selecting the best technology for each problem.
+
+Making these solutions using a team effort is something I am really passionate about. I especially have an interest in planning and making sure we as a team have a good energy and happy workflow 🚀.
 <br>
-Currently working at ehvLINC on a project called ![Suitless]("https://gitlab.com/suitless"). 
-Also doing my last year of software engineering at Fontys University of Applied Sciences 💪🏼.
 
 ## Languages and frameworks I've learned so far:
 
@@ -24,20 +27,6 @@ Also doing my last year of software engineering at Fontys University of Applied 
 
 <br><br><br>
 
-Link to my [developing stack](./../stack/Software.md)
-
-![Metrics](https://metrics.lecoq.io/spoilerdo?template=classic&base.activity=0&base.community=0&base.repositories=0&base.metadata=0&languages=1&config.timezone=Europe%2FBerlin)
-
-# Suitless
-This is one of the biggest projects we (my colleges and I) worked on.
-You can check it out on ![gitlab]("https://gitlab.com/suitless").
-The project is a flowchart editor that can create dynamic questionnaires people can fill in to get personalized advice about a certain topic. Currently it is being used to give startup companies information about legal issues, for instance: Privacy and Intellectual Property.
-But the applications for this project is limitless.
-
-# Gitlab Activity
-Beceause I work a lot on Gitlab I made an auto generated graph of my ![gitlab activity]("https://gitlab.com/martijn.dormans").
-
-<img alt="gitlab-heatmap" width="100%" src="https://raw.githubusercontent.com/spoilerdo/spoilerdo/master/gitlab-metrics.svg">
-
 ## Other projects
-If you want to see more projects I did with my classmates at university or on my own check the repositories below.
+
+If you want to see more projects I worked on in my free time or old university projects, check the repositories below.
